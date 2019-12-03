@@ -3,7 +3,7 @@
         <img [src]="sheet.picUrl" [alt]="sheet.name">
         <div class="bottom">
             <div class="num"><i class="icon erji"></i>
-            <span>{{sheet.playCount}}</span>
+            <span>{{sheet.playCount | playCount}}</span>
             </div>
             <i class="icon play"></i>
         </div>
