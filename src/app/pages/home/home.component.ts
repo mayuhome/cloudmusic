@@ -3,6 +3,8 @@ import { HomeService } from 'src/app/services/home.service';
 import { Banner, HotTag, SongSheet, Singer } from 'src/app/services/data-types/common.types';
 import { NzCarouselComponent } from 'ng-zorro-antd';
 import { SingerService } from 'src/app/services/singer.service';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -22,37 +24,44 @@ export class HomeComponent implements OnInit {
   constructor(
     private homeServe: HomeService,
     private singerServe: SingerService,
+    private route: ActivatedRoute
   ) {
-    this.getBanners();
-    this.getHotTags();
-    this.getSongSheets();
-    this.getEnterSingers();
-
-  }
-
-  private getBanners() {
-    this.homeServe.getBanner().subscribe(banners => {
+    this.route.data.pipe(map(res => res.homeData)).subscribe(([banners, hotTags, songSheets, singers]) => {
       this.banners = banners;
-    });
-  }
-  private getHotTags() {
-    this.homeServe.getHotTags().subscribe(tags => {
-      console.log('tags:', tags);
-      this.hotTags = tags;
-    });
-  }
-  private getSongSheets() {
-    this.homeServe.getPersonalSheetList().subscribe(sheets => {
-      console.log('sheets:', sheets);
-      this.songSheets = sheets;
-    });
+      this.hotTags = hotTags;
+      this.songSheets = songSheets;
+      this.singers = singers;
+    })
+    // this.getBanners();
+    // this.getHotTags();
+    // this.getSongSheets();
+    // this.getEnterSingers();
+
   }
 
-  private getEnterSingers(){
-    this.singerServe.getEnterSigner().subscribe(singers => {
-      this.singers = singers;
-    });
-  }
+  // private getBanners() {
+  //   this.homeServe.getBanner().subscribe(banners => {
+  //     this.banners = banners;
+  //   });
+  // }
+  // private getHotTags() {
+  //   this.homeServe.getHotTags().subscribe(tags => {
+  //     console.log('tags:', tags);
+  //     this.hotTags = tags;
+  //   });
+  // }
+  // private getSongSheets() {
+  //   this.homeServe.getPersonalSheetList().subscribe(sheets => {
+  //     console.log('sheets:', sheets);
+  //     this.songSheets = sheets;
+  //   });
+  // }
+
+  // private getEnterSingers() {
+  //   this.singerServe.getEnterSigner().subscribe(singers => {
+  //     this.singers = singers;
+  //   });
+  // }
 
   ngOnInit() {
   }

@@ -20,7 +20,7 @@ export interface SongSheet {
     playCount: number;
 }
 
-export interface Singer{
+export interface Singer {
     id: number;
     name: string;
     picUrl: string;

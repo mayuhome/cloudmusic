@@ -16,7 +16,7 @@ const defaultParams: SingerParams = {
   offset: 0,
   limit: 9,
   cat: '5001'
-}
+};
 
 @Injectable({
   providedIn: ServicesModule
@@ -28,7 +28,7 @@ export class SingerService {
     @Inject(API_CONFIG) private uri: string
   ) { }
 
-  getEnterSigner(args: SingerParams = defaultParams): Observable<Array<Singer>>{
+  getEnterSigner(args: SingerParams = defaultParams): Observable<Array<Singer>> {
     const params = new HttpParams({fromString: JSON.stringify(args)});
     return this.http.get(`${this.uri}artist/list`, {params})
     .pipe(map((res: {artists: Array<Singer>}) => res.artists));
