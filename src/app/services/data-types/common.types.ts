@@ -12,17 +12,40 @@ export interface HotTag {
     position: number;
 }
 
+
+// 歌手
+export interface Singer {
+    id: number;
+    name: string;
+    picUrl: string;
+    albumSize: number;
+}
+
+// 歌曲
+export interface Song {
+    id: number;
+    name: string;
+    url: string;
+    ar: Array<Singer>;
+    al: {
+        id: number;
+        name: string;
+        picUrl: string;
+    };
+    dt: number;
+}
+
+// 播放地址
+export interface SongUrl {
+    id: number;
+    url: string;
+}
+
 // 歌单
 export interface SongSheet {
     id: number;
     name: string;
     picUrl: string;
     playCount: number;
-}
-
-export interface Singer {
-    id: number;
-    name: string;
-    picUrl: string;
-    albumSize: number;
+    tracks: Array<Song>;
 }

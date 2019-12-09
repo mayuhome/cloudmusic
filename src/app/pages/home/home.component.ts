@@ -5,6 +5,7 @@ import { NzCarouselComponent } from 'ng-zorro-antd';
 import { SingerService } from 'src/app/services/singer.service';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { SheetService } from 'src/app/services/sheet.service';
 
 @Component({
   selector: 'app-home',
@@ -22,8 +23,7 @@ export class HomeComponent implements OnInit {
   @ViewChild(NzCarouselComponent, { static: true }) private nzCarousel: NzCarouselComponent;
 
   constructor(
-    private homeServe: HomeService,
-    private singerServe: SingerService,
+    private sheetServe: SheetService,
     private route: ActivatedRoute
   ) {
     this.route.data.pipe(map(res => res.homeData)).subscribe(([banners, hotTags, songSheets, singers]) => {
@@ -32,36 +32,11 @@ export class HomeComponent implements OnInit {
       this.songSheets = songSheets;
       this.singers = singers;
     })
-    // this.getBanners();
-    // this.getHotTags();
-    // this.getSongSheets();
-    // this.getEnterSingers();
+    
 
   }
 
-  // private getBanners() {
-  //   this.homeServe.getBanner().subscribe(banners => {
-  //     this.banners = banners;
-  //   });
-  // }
-  // private getHotTags() {
-  //   this.homeServe.getHotTags().subscribe(tags => {
-  //     console.log('tags:', tags);
-  //     this.hotTags = tags;
-  //   });
-  // }
-  // private getSongSheets() {
-  //   this.homeServe.getPersonalSheetList().subscribe(sheets => {
-  //     console.log('sheets:', sheets);
-  //     this.songSheets = sheets;
-  //   });
-  // }
-
-  // private getEnterSingers() {
-  //   this.singerServe.getEnterSigner().subscribe(singers => {
-  //     this.singers = singers;
-  //   });
-  // }
+  
 
   ngOnInit() {
   }
@@ -72,5 +47,12 @@ export class HomeComponent implements OnInit {
 
   onChangeSlide(type: 'pre' | 'next') {
     this.nzCarousel[type]();
+  }
+
+  onPlaySheet(id: number){
+    console.log('id:', id);
+    this.sheetServe.playSheet(id).subscribe(res => {
+      console.log('res:', res);
+    })
   }
 }
