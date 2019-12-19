@@ -11,7 +11,7 @@ export class WySliderHandleComponent implements OnInit, OnChanges {
   @Input() wyVertical = false;
   @Input() wyOffset: number;
 
-  style: IWySliderStyle;
+  style: IWySliderStyle = {};
 
   constructor() { }
 
