@@ -9,6 +9,11 @@ import zh from '@angular/common/locales/zh';
 import { SharesModule } from '../shares/shares.module';
 import { ServicesModule } from '../services/services.module';
 import { PagesModule } from '../pages/pages.module';
+import { AppStoreModule } from '../store';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from '../reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
 
 registerLocaleData(zh);
 
@@ -22,7 +27,16 @@ registerLocaleData(zh);
 
     PagesModule,
     SharesModule,
-    ServicesModule
+    ServicesModule,
+    AppStoreModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   exports: [
     SharesModule,
