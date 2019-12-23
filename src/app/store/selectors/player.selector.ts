@@ -1,11 +1,12 @@
-import { PlayState } from "../reducers/play.reducer";
+
 import { createSelector } from '@ngrx/store';
+import { PlayState } from '../reducers/play.reducer';
+const selectPlayerStates = (state: PlayState) => state;
 
-const selectPlayStates = (state: PlayState) => state;
+export const getPlaying = createSelector(selectPlayerStates, (state: PlayState) => state.playing);
+export const getPlayList = createSelector(selectPlayerStates, (state: PlayState) => state.playList);
+export const getSongList = createSelector(selectPlayerStates, (state: PlayState) => state.songList);
+export const getPlayMode = createSelector(selectPlayerStates, (state: PlayState) => state.playMode);
+export const getCurrentIndex = createSelector(selectPlayerStates, (state: PlayState) => state.currentIndex);
 
-export const getPlaying = createSelector(selectPlayStates, (state: PlayState) => state.playing);
-export const getPlayList = createSelector(selectPlayStates, (state: PlayState) => state.playList);
-export const getSongList = createSelector(selectPlayStates, (state: PlayState) => state.songList);
-export const getPlayMode = createSelector(selectPlayStates, (state: PlayState) => state.playMode);
-export const getCurrentIndex = createSelector(selectPlayStates, (state: PlayState) => state.cunrentIndex);
-export const getCurrentSong = createSelector(selectPlayStates, ({playList, cunrentIndex}: PlayState) => playList[cunrentIndex]);
+export const getCurrentSong = createSelector(selectPlayerStates, ({ playList, currentIndex }: PlayState) => playList[currentIndex]);

@@ -17,7 +17,7 @@ export interface PlayState {
     playList: Array<Song>;
 
     // 当前播放索引
-    cunrentIndex: number;
+    currentIndex: number;
 }
 
 export const initialState: PlayState = {
@@ -25,7 +25,7 @@ export const initialState: PlayState = {
     songList: [],
     playList: [],
     playMode: {type: 'loop', label: '循环'},
-    cunrentIndex: -1
+    currentIndex: -1
 }
 
 const reducer = createReducer(
