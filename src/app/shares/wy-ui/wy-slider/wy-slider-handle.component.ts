@@ -7,20 +7,18 @@ import { IWySliderStyle } from './wy-slider-types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WySliderHandleComponent implements OnInit, OnChanges {
-
   @Input() wyVertical = false;
   @Input() wyOffset: number;
 
   style: IWySliderStyle = {};
-
   constructor() { }
 
   ngOnInit() {
   }
 
-  ngOnChanges(c: SimpleChanges){
-    if(c['wyOffset']){
-      this.style[this.wyVertical?'bottom':'left'] = `${this.wyOffset}%`;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['wyOffset']) {
+      this.style[this.wyVertical ? 'bottom' : 'left'] = this.wyOffset + '%';
     }
   }
 }
