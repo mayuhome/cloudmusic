@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { GetnameComponent } from './getname/getname.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full'}
+  { path: '', redirectTo: '/home', pathMatch: 'full'},
+  { path: 'getname', component: GetnameComponent}
 ];
 
 @NgModule({
