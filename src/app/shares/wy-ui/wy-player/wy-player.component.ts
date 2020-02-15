@@ -175,6 +175,7 @@ export class WyPlayerComponent implements OnInit {
       this.winClick = fromEvent(this.doc, 'click').subscribe(()=> {
         if(!this.selfClick){ // 点击播放器以外的地方
         this.showVolumnPanel = false;
+        this.showPanel = false;
         this.unbindDocumentClickListener();
         }
         this.selfClick = false;
