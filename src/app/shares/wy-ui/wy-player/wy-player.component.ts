@@ -4,10 +4,22 @@ import { AppStoreModule } from '../../../store/index';
 import { getSongList, getPlayList, getCurrentIndex, getPlayMode, getCurrentSong } from '../../../store/selectors/player.selector';
 import { Song } from '../../../services/data-types/common.types';
 import { PlayMode } from './player-model';
-import { SetCurrentIndex } from 'src/app/store/actions/player.action';
+import { SetCurrentIndex, SetPlayMode, SetPlayList } from 'src/app/store/actions/player.action';
 import { Subscription, fromEvent } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
+import { shuffle } from 'src/app/utils/array';
 
+
+const modeTypes: Array<PlayMode> = [{
+  type: 'loop',
+  label: '循环'
+}, {
+  type: 'random',
+  label: '随机'
+}, {
+  type: 'singleLoop',
+  label: '单曲循环'
+}];
 
 @Component({
   selector: 'app-wy-player',
@@ -42,6 +54,10 @@ export class WyPlayerComponent implements OnInit {
   selfClick = false;
 
   private winClick: Subscription;
+
+  // 当前模式
+  currentMode: PlayMode;
+  modeCount = 0;
 
   @ViewChild('audio', { static: true }) private audio: ElementRef;
   private audioEl: HTMLAudioElement;
@@ -91,6 +107,15 @@ export class WyPlayerComponent implements OnInit {
 
   private watchPlayMode(mode: PlayMode) {
     console.log('mode :', mode);
+    this.currentMode = mode;
+    if(this.songList){
+      let  list = this.songList.slice();
+      if(mode.type === 'random'){
+        list = shuffle(this.songList);
+        this.updateCurrentIndex(list, this.currentSong);
+        this.store$.dispatch(SetPlayList({playList: list}));
+      }
+    }
   }
 
   private watchCurrentSong(song: Song) {
@@ -99,6 +124,16 @@ export class WyPlayerComponent implements OnInit {
       this.duration = song.dt / 1000;
       console.log('song :', song);
     }
+  }
+
+  private updateCurrentIndex(list: Array<Song>, song: Song){
+    const newIndex = list.findIndex(item => item.id === song.id);
+    this.store$.dispatch(SetCurrentIndex({currentIndex: newIndex}));
+  }
+
+  // 改变模式
+  changeMode(){
+    this.store$.dispatch(SetPlayMode({playMode: modeTypes[++this.modeCount%3]}));
   }
 
   onPercentChange(per: number){
@@ -179,6 +214,16 @@ export class WyPlayerComponent implements OnInit {
     }else{
       const newIndex = index>=this.playList.length?0:index;
       this.updateIndex(newIndex);
+    }
+  }
+
+  // 播放结束
+  onEnded(){
+    this.playing = false;
+    if(this.currentMode.type === 'singleLoop'){
+      this.loop();
+    }else{
+      this.onNext(this.currentIndex + 1);
     }
   }
 
