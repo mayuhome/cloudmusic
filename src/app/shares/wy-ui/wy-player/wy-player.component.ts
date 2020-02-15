@@ -50,8 +50,12 @@ export class WyPlayerComponent implements OnInit {
   // 音量面板
   showVolumnPanel = false;
 
+  // 列表面板
+  showPanel = false;
+
   // 是否点击音量面板本身
   selfClick = false;
+
 
   private winClick: Subscription;
 
@@ -146,13 +150,20 @@ export class WyPlayerComponent implements OnInit {
   }
 
   /* 控制音量面板 */
-  toggleVolPanel(evt: MouseEvent){
-    this.togglePanel();
+  toggleVolPanel(){
+    this.togglePanel('showVolumnPanel');
+  }
+  
+  // 控制列表面板
+  toggleListPanel(){
+    if(this.songList.length){
+      this.togglePanel('showPanel');
+    }
   }
 
-  togglePanel(){
-    this.showVolumnPanel = !this.showVolumnPanel;
-    if(this.showVolumnPanel){
+  togglePanel(type: string){
+    this[type] = !this[type];
+    if(this.showVolumnPanel || this.showPanel){
       this.bindDocumentClickListener();
     }else{
       this.unbindDocumentClickListener();
@@ -259,5 +270,10 @@ export class WyPlayerComponent implements OnInit {
 
   get picUrl(): string {
     return this.currentSong? this.currentSong.al.picUrl:'//s4.music.126.net/style/web2/img/default/default_album.jpg';
+  }
+
+  // 改变歌曲
+  onChangeSong(song: Song){
+    this.updateCurrentIndex(this.playList, song);
   }
 }
