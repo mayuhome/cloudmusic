@@ -8,6 +8,7 @@ import { SetCurrentIndex, SetPlayMode, SetPlayList } from 'src/app/store/actions
 import { Subscription, fromEvent } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { shuffle } from 'src/app/utils/array';
+import { WyPlayerPanelComponent } from './wy-player-panel/wy-player-panel.component';
 
 
 const modeTypes: Array<PlayMode> = [{
@@ -64,6 +65,8 @@ export class WyPlayerComponent implements OnInit {
   modeCount = 0;
 
   @ViewChild('audio', { static: true }) private audio: ElementRef;
+  @ViewChild(WyPlayerPanelComponent, {static: false}) private playPanel: WyPlayerPanelComponent;
+
   private audioEl: HTMLAudioElement;
 
 
@@ -141,7 +144,13 @@ export class WyPlayerComponent implements OnInit {
   }
 
   onPercentChange(per: number){
-    this.audioEl.currentTime = this.duration * (per / 100);
+    if(this.currentSong){
+      const currentTime = this.duration * (per / 100);
+      this.audioEl.currentTime = currentTime;
+    }
+    if(this.playPanel){
+      this.playPanel.seekLyric(this.currentTime * 1000);
+    }
   }
 
   /* 控制音量 */
@@ -243,6 +252,9 @@ export class WyPlayerComponent implements OnInit {
   private loop(){
     this.audioEl.currentTime = 0;
     this.play();
+    if(this.playPanel){
+      this.playPanel.seekLyric(0);
+    }
   }
 
   private updateIndex(index: number){
