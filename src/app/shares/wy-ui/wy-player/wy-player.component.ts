@@ -56,8 +56,8 @@ export class WyPlayerComponent implements OnInit {
   // 列表面板
   showPanel = false;
 
-  // 是否点击音量面板本身
-  selfClick = false;
+  // 是否绑定document click事件
+  bindFlag = false;
 
 
   private winClick: Subscription;
@@ -147,6 +147,12 @@ export class WyPlayerComponent implements OnInit {
     this.store$.dispatch(SetPlayMode({playMode: modeTypes[++this.modeCount%3]}));
   }
 
+  onClickOutside(){
+    this.showVolumnPanel = false;
+    this.showPanel = false;
+    this.bindFlag = false;
+  }
+
   onPercentChange(per: number){
     if(this.currentSong){
       const currentTime = this.duration * (per / 100);
@@ -176,31 +182,7 @@ export class WyPlayerComponent implements OnInit {
 
   togglePanel(type: string){
     this[type] = !this[type];
-    if(this.showVolumnPanel || this.showPanel){
-      this.bindDocumentClickListener();
-    }else{
-      this.unbindDocumentClickListener();
-    }
-  }
-
-  private bindDocumentClickListener(){
-    if(!this.winClick){
-      this.winClick = fromEvent(this.doc, 'click').subscribe(()=> {
-        if(!this.selfClick){ // 点击播放器以外的地方
-        this.showVolumnPanel = false;
-        this.showPanel = false;
-        this.unbindDocumentClickListener();
-        }
-        this.selfClick = false;
-      });
-    }
-  }
-
-  private unbindDocumentClickListener(){
-    if(this.winClick){
-      this.winClick.unsubscribe();
-      this.winClick = null;
-    }
+    this.bindFlag = this.showVolumnPanel || this.showPanel;
   }
 
   // 播放/暂停
