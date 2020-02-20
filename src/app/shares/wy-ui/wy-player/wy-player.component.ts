@@ -4,11 +4,13 @@ import { AppStoreModule } from '../../../store/index';
 import { getSongList, getPlayList, getCurrentIndex, getPlayMode, getCurrentSong } from '../../../store/selectors/player.selector';
 import { Song } from '../../../services/data-types/common.types';
 import { PlayMode } from './player-model';
-import { SetCurrentIndex, SetPlayMode, SetPlayList } from 'src/app/store/actions/player.action';
+import { SetCurrentIndex, SetPlayMode, SetPlayList, SetSongList } from 'src/app/store/actions/player.action';
 import { Subscription, fromEvent } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-import { shuffle } from 'src/app/utils/array';
+import { shuffle, findIndex } from 'src/app/utils/array';
 import { WyPlayerPanelComponent } from './wy-player-panel/wy-player-panel.component';
+import { NzModalService } from 'ng-zorro-antd';
+import { BatchActionService } from 'src/app/store/batch-action.service';
 
 
 const modeTypes: Array<PlayMode> = [{
@@ -72,7 +74,9 @@ export class WyPlayerComponent implements OnInit {
 
   constructor(
     private store$: Store<AppStoreModule>,
-    @Inject(DOCUMENT) private doc: Document
+    @Inject(DOCUMENT) private doc: Document,
+    private nzModalServe: NzModalService,
+    private batchActionServe: BatchActionService
   ) {
     const appStore$ = this.store$.pipe(select('player'));
     const stateArr = [{
@@ -288,5 +292,20 @@ export class WyPlayerComponent implements OnInit {
   // 改变歌曲
   onChangeSong(song: Song){
     this.updateCurrentIndex(this.playList, song);
+  }
+
+  // 删除歌曲
+  onDeleteSong(song: Song){
+    this.batchActionServe.deleteSong(song);
+  }
+
+  // 清空歌曲
+  onClearSong(){
+    this.nzModalServe.confirm({
+      nzTitle: '确认清空列表?',
+      nzOnOk:() => {
+        this.batchActionServe.clearSong();
+      }
+    })
   }
 }
