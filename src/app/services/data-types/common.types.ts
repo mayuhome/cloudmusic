@@ -46,6 +46,7 @@ export interface SongSheet {
     id: number;
     name: string;
     picUrl: string;
+    coverImgUrl: string;
     playCount: number;
     tracks: Array<Song>;
 }
@@ -54,4 +55,10 @@ export interface SongSheet {
 export interface Lyric {
     lyric: string;
     tlyric: string;
+}
+
+// 歌单列表
+export interface SheetList {
+    playlists: Array<SongSheet>;
+    total: number;
 }
